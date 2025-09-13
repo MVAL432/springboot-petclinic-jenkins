@@ -1,2 +1,2 @@
-# springboot-petclinic-jenkins
-springboot-petclinic-jenkins
+# morning-javaspringbootapp
+morning-javaspringbootapp
