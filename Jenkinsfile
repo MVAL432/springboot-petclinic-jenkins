@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Chekcout from Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/MVAL432/springboot-petclinic-jenkins.git
+                git branch: 'main', url: 'https://github.com/MVAL432/springboot-petclinic-jenkins.git'
             }
         }
         stage('Maven validate') {
