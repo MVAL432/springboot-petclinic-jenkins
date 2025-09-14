@@ -96,7 +96,7 @@ pipeline {
                     echo "login to Azure"
                     sh '''
                     az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
-                    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --overwrte-existing
+                    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --overwrite-existing
                     '''
                   }  
                 }  
