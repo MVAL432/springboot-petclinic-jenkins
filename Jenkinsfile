@@ -3,7 +3,15 @@ pipeline {
     tools {
         maven 'maven'
     }
-
+    environment {
+        IMAGE_NAME = "springbootapp"
+        IMAGE_TAG = "latest"
+        ACR_NAME = "jenkinsdocker" 
+        ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
+        FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
+        TENANT_ID = "c52d77bf-a68c-4cdc-8c07-cd47ca3b978e"
+    
+    }
     stages {
         stage('Chekcout from Git') {
             steps {
@@ -48,20 +56,37 @@ pipeline {
                 }
             }
         }
-        // stage('Docker Build') {
-        //     steps {
-        //         script {
-        //             echo 'Building Docker Image'
-        //             docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
-        //         }
-        //     }
-        // }
-        // stage('Azure login to ACR') {
-        //     steps{
-        //     withCredentials()}
-        // }
-
-
-
+        stage('Docker Build') {
+            steps {
+                script {
+                    echo 'Building Docker Image'
+                    docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                }
+            }
+        }
+        stage('Azure login to ACR') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'azure-acr-sp',usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
+                  script {
+                    echo "login to Azure"
+                    sh '''
+                    az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
+                    az acr login --name $ACR_NAME
+                    '''
+                  }  
+                  
+            }
+        }
+        stage('Docker Push to ACR') {
+            steps {
+                script {
+                    echo "Docker image push"
+                    sh '''
+                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${FULL_IMAGE_NAME}
+                    docker push ${FULL_IMAGE_NAME}
+                    '''
+                }
+            }
+        }
     }
 }
