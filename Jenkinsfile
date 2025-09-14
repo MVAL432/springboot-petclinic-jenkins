@@ -74,7 +74,7 @@ pipeline {
                     az acr login --name $ACR_NAME
                     '''
                   }  
-                  
+                }  
             }
         }
         stage('Docker Push to ACR') {
