@@ -10,7 +10,8 @@ pipeline {
         ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
         FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
         TENANT_ID = "c52d77bf-a68c-4cdc-8c07-cd47ca3b978e"
-    
+        RESOURCE_GROUP = "demo-rg"
+        CLUSTER_NAME    = "demo-eks"
     }
     stages {
         stage('Chekcout from Git') {
@@ -85,6 +86,31 @@ pipeline {
                     docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${FULL_IMAGE_NAME}
                     docker push ${FULL_IMAGE_NAME}
                     '''
+                }
+            }
+        }
+        stage('Login to AKS cluster') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'azure-acr-sp',usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
+                  script {
+                    echo "login to Azure"
+                    sh '''
+                    az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
+                    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
+                    '''
+                  }  
+                }  
+            }
+        }
+        stage('Deploy to AKS') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'azure-acr-sp',usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
+                script {
+                    echo "Deploying to AKS"
+                    sh '''
+                    kubectl apply -f k8s/sprinboot-deployment.yaml
+                    '''
+                    }
                 }
             }
         }
