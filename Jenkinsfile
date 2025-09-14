@@ -30,7 +30,7 @@ pipeline {
                     $SCANNER_HOME/bin/sonar-scanner \
                     -Dsonar.organization=Anand-Devops \
                     -Dsonar.projectName=petclinic \
-                    -Dsonar.projectKey=module-project7-org_petclinic \
+                    -Dsonar.projectKey=anand-devops-org-petclinic \
                     -Dsonar.java.binaries=.
                     '''
                 }
