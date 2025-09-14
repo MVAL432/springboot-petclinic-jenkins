@@ -96,7 +96,7 @@ pipeline {
                     echo "login to Azure"
                     sh '''
                     az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
-                    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
+                    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --overwrte-existing
                     '''
                   }  
                 }  
@@ -108,7 +108,7 @@ pipeline {
                 script {
                     echo "Deploying to AKS"
                     sh '''
-                    kubectl apply -f k8s/sprinboot-deployment.yaml
+                    kubectl apply -f k8s/springboot-deployment.yaml
                     '''
                     }
                 }
