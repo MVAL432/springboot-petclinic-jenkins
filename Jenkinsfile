@@ -27,7 +27,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonarserver') {
                     sh  '''
-                    $SCANNER_HOME/bin/Sonar-scanner \
+                    $SCANNER_HOME/bin/sonar-scanner \
                     -Dsonar.organization=Anand-Devops \
                     -Dsonar.projectName=petclinic \
                     -Dsonar.projectKey=module-project7-org_petclinic \
