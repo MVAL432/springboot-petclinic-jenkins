@@ -20,46 +20,46 @@ pipeline {
                 sh 'mvn compile'
             }
         }
-    //    stage('SonarQube analysis') {
-    //         environment {
-    //             SCANNER_HOME = tool 'Soanr-Scanner'
-    //         }
-    //         steps {
-    //             withSonarQubeEnv('sonarserver') {
-    //                 sh  '''
-    //                 $SCANNER_HOME/bin/sonar-scanner \
-    //                 -Dsonar.organization=myorg \
-    //                 -Dsonar.projectName=springboot-petclinic-jenkins \
-    //                 -Dsonar.projectKey=springboot-petclinic-jenkins \
-    //                 -Dsonar.java.binaries=.
-    //                 '''
-    //             }
-    //         }
-    //     }
-    //     stage('Maven package') {
-    //         steps {
-    //             sh 'mvn package'
-    //         }
-    //     }
-    //     stage('Sonar Quality Gate') {
-    //         steps {  
-    //             timeout(time: 1, unit: 'MINUTES') {
-    //                 waitForQualityGate abortPipeline: true, credentialsId: 'sonar'
-    //             }
-    //         }
-    //     }
-    //     stage('Docker Build') {
-    //         steps {
-    //             script {
-    //                 echo 'Building Docker Image'
-    //                 docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
-    //             }
-    //         }
-    //     }
-    //     stage('Azure login to ACR') {
-    //         steps{
-    //         withCredentials()}
-    //     }
+       stage('SonarQube analysis') {
+            environment {
+                SCANNER_HOME = tool 'Soanr-Scanner'
+            }
+            steps {
+                withSonarQubeEnv('sonarserver') {
+                    sh  '''
+                    $SCANNER_HOME/bin/sonar-scanner \
+                    -Dsonar.organization=Anand-Devops \
+                    -Dsonar.projectName=petclinic \
+                    -Dsonar.projectKey=module-project7-org_petclinic \
+                    -Dsonar.java.binaries=.
+                    '''
+                }
+            }
+        }
+        stage('Maven package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+        stage('Sonar Quality Gate') {
+            steps {  
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true, credentialsId: 'sonar'
+                }
+            }
+        }
+        // stage('Docker Build') {
+        //     steps {
+        //         script {
+        //             echo 'Building Docker Image'
+        //             docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+        //         }
+        //     }
+        // }
+        // stage('Azure login to ACR') {
+        //     steps{
+        //     withCredentials()}
+        // }
 
 
 
