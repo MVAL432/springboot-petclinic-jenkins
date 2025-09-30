@@ -10,7 +10,7 @@ pipeline {
         ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
         FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
         TENANT_ID = "c52d77bf-a68c-4cdc-8c07-cd47ca3b978e"
-        RESOURCE_GROUP = "demo-rg"
+        RESOURCE_GROUP = "azd-rg"
         CLUSTER_NAME    = "demo-eks"
     }
     stages {
@@ -37,7 +37,7 @@ pipeline {
                 withSonarQubeEnv('sonarserver') {
                     sh  '''
                     $SCANNER_HOME/bin/sonar-scanner \
-                    -Dsonar.organization=anand-devops \
+                    -Dsonar.organization=Anand-Devops \
                     -Dsonar.projectName=petclinic \
                     -Dsonar.projectKey=anand-devops_petclinic \
                     -Dsonar.java.binaries=.
@@ -114,5 +114,19 @@ pipeline {
                 }
             }
         }
+        // stage('Checking the pools and services') {
+        //     steps {
+        //         withCredentials([usernamePassword(credentialsId: 'azure-acr-sp',usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
+        //         script {
+        //             echo "Checking pods and services"
+        //             dependson: Deploy to AKS
+        //             sh '''
+        //             kubectl get pods -o wide
+        //             kubectl get svc
+        //             '''
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
